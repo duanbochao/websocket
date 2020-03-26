@@ -10,7 +10,8 @@
 <body>
 
 <button type="button" onclick="connent()">连接</button>
-<input type="text" id="name"/>
+发给谁:<input type="text" id="name"/>
+发送的内容:<input type="text" id="content"/>
 <button type="button" onclick="sendMsg()">发送</button>
 <script>
 
@@ -21,7 +22,7 @@
         var socket = new SockJS("/endpointSang");
         stompClient= Stomp.over(socket);
         stompClient.connect({},function (frame) {
-            stompClient.subscribe("/topic/getResponse",function (response) {
+            stompClient.subscribe("/user/queue/chat",function (response) {
                 console.log(response)
             })
         })
@@ -37,7 +38,8 @@
     //发送数据
     function  sendMsg() {
         var name = $("#name").val();
-        stompClient.send("/welcome",{},JSON.stringify({"name":name}));
+        var content = $("#content").val();
+        stompClient.send("/chat",{},JSON.stringify({"to":name,"content":content}));
     }
 
 
